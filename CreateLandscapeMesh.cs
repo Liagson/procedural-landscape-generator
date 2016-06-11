@@ -25,7 +25,6 @@ public class CreatePlaneMesh : MonoBehaviour {
     void Start() {
         GenerateMap();
         GenerateMesh();
-
     }
     
     void GenerateMap() {
@@ -126,6 +125,32 @@ public class CreatePlaneMesh : MonoBehaviour {
         return wallCount;
     }
 
+    public void processVertex(int x_sup_left, int y_sup_left) {
+        vertex.Add(new Vector3(x_sup_left, y_sup_left, map[x_sup_left, y_sup_left]));
+        vertex.Add(new Vector3(x_sup_left + 1, y_sup_left, map[x_sup_left + 1, y_sup_left]));
+        vertex.Add(new Vector3(x_sup_left, y_sup_left + 1, map[x_sup_left, y_sup_left + 1]));
+        vertex.Add(new Vector3(x_sup_left + 1, y_sup_left + 1, map[x_sup_left + 1, y_sup_left + 1]));
+    }
+
+    public void processTriangles(int pos_relat) {
+
+        triangles.Add(pos_relat);
+        triangles.Add(pos_relat + 3);
+        triangles.Add(pos_relat + 2);
+
+        triangles.Add(pos_relat);
+        triangles.Add(pos_relat + 1);
+        triangles.Add(pos_relat + 3);
+    }
+
+    public void processUv() {
+
+        uv.Add(new Vector2(0, 1));
+        uv.Add(new Vector2(1, 1));
+        uv.Add(new Vector2(0, 0));
+        uv.Add(new Vector2(1, 0));
+    }
+
     Color32 setColor(int x, int y) {
         if (map[x, y] == 0)
             return new Color32(0, 255, 255, 1);
@@ -144,14 +169,10 @@ public class CreatePlaneMesh : MonoBehaviour {
         int pos_relat = 1;
         for (int y = 0; y < height - 1; y++) {
             for (int x = 0; x < width - 1; x++) {
-                Area area = new Area(x, y, map, pos_relat - 1);
 
-                foreach (Vector3 vector in area.processVertex())
-                    vertex.Add(vector);
-                foreach (int vector in area.procesarTriangles())
-                    triangles.Add(vector);
-                foreach (Vector2 vector in area.processUv())
-                    uv.Add(vector);
+                processVertex(x, y);
+                processTriangles(pos_relat - 1);
+                processUv();
 
                 colours.Add(setColor(x, y));
                 colours.Add(setColor(x + 1, y));
@@ -170,55 +191,4 @@ public class CreatePlaneMesh : MonoBehaviour {
         mesh.Optimize();
         
     }
-}
-
-public class Area {
-    private int x_sup_left;
-    private int y_sup_left;
-    private int[,] map;
-    private int pos_relat;
-
-    public Area(int x, int y, int[,] map, int pos_relat) {
-        x_sup_left = x;
-        y_sup_left = y;
-        this.map = map;
-        this.pos_relat = pos_relat;
-    }
-
-    public Vector3[] processVertex() {
-        Vector3[] vertexArray = new Vector3[4];
-
-        vertexArray[0] = new Vector3(x_sup_left, y_sup_left, map[x_sup_left, y_sup_left]);
-        vertexArray[1] = new Vector3(x_sup_left + 1, y_sup_left, map[x_sup_left + 1, y_sup_left]);
-        vertexArray[2] = new Vector3(x_sup_left, y_sup_left + 1, map[x_sup_left, y_sup_left + 1]);
-        vertexArray[3] = new Vector3(x_sup_left + 1, y_sup_left + 1, map[x_sup_left + 1, y_sup_left + 1]);
-
-        return vertexArray;
-    }
-
-    public int[] procesarTriangles() {
-        int[] triangleArray = new int[6];
-
-        triangleArray[0] = pos_relat;
-        triangleArray[1] = pos_relat + 3;
-        triangleArray[2] = pos_relat + 2;
-
-        triangleArray[3] = pos_relat;
-        triangleArray[4] = pos_relat + 1;
-        triangleArray[5] = pos_relat + 3;
-
-        return triangleArray;
-    }
-
-    public Vector2[] processUv() {
-        Vector2[] uvArray = new Vector2[4];
-
-        uvArray[0] = new Vector2(0, 1);
-        uvArray[1] = new Vector2(1, 1);
-        uvArray[2] = new Vector2(0, 0);
-        uvArray[3] = new Vector2(1, 0);
-
-        return uvArray;
-    }
-
 }
