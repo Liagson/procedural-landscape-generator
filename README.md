@@ -8,6 +8,8 @@ A cellular automata algorithm is used to define the coastline. The heightmap is 
 ## Setting things up
 1. You will need Unity installed to generate the maps
 2. Create an empty GameObject
-3. A Mesh Filter and a Mesh Renderer are needed to show the landscape. Add them to the GameObject
+3. A Mesh Renderer is needed to show the landscape. Add it to the GameObject
 5. Add CreateLandscapeMesh.cs to the GameObject
-6. A plane mesh (with height 1) with a FX/Water shader was added to make the water effect
+6. Add a Shader to the GameObject. I'm using a Standar(VertexColor) due to how colours were added
+7. A plane mesh (with height 1) with a FX/Water shader was added to make the water effect
+

@@ -160,7 +160,7 @@ public class CreatePlaneMesh : MonoBehaviour {
     }
 
     void GenerateMesh() {
-        MeshFilter mf = GetComponent<MeshFilter>();
+        MeshFilter mf = (MeshFilter)this.gameObject.AddComponent(typeof(MeshFilter));
         Mesh mesh = new Mesh();
         mf.mesh = mesh;
         mesh.Clear();
